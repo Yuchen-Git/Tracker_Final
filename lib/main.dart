@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'navigatorForEveryPage.dart';
+import 'Screen/navigatorForEveryPage.dart';
 import 'Screen/loginPage.dart';
 import 'list.dart';
 import 'firebase_options.dart';

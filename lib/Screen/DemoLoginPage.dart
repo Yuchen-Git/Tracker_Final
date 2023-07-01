@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../main.dart';
 import '../list.dart';
-import '../navigatorForEveryPage.dart';
+import 'navigatorForEveryPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthPage extends StatefulWidget {
