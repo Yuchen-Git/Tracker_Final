@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import '../main.dart';
-import 'loginPage.dart';
-import '../list.dart';
-import '../userProfile.dart';
-import 'DemoLoginPage.dart';
-import 'Screen_Calendar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'Page_EventsList.dart';
+import 'Page_AuthLogin.dart';
 
 
 class PageNavi extends StatefulWidget {
@@ -49,15 +44,6 @@ class _PageNaviState extends State<PageNavi> {
             flex: 1,
             child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => userProfilePage()),
-                    );
-                  },
-                  child: const Text('userProfilePage'),
-                ),
               ],
             ),
           ),
@@ -81,15 +67,6 @@ class _PageNaviState extends State<PageNavi> {
             flex: 1,
             child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EventListPage()),
-                    );
-                  },
-                  child: const Text('EventListPage'),
-                ),
               ],
             ),
           ),

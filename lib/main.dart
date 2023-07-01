@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Screen/navigatorForEveryPage.dart';
-import 'Screen/loginPage.dart';
-import 'list.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'Screen/Page_AuthLogin.dart';
 
 
 
@@ -28,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const PageNavi(),
+      home: const FirebaseAuthPage(),
     );
   }
 }

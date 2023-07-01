@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:math';
-import 'Screen/Screen_Calendar.dart';
+import 'Page_CalendarScreen.dart';
 
 class EventListPage extends StatefulWidget {
   const EventListPage({Key? key}): super(key: key);
@@ -17,8 +15,8 @@ class _EventListPageState extends State<EventListPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<int> _countDocuments() async {
-    final CollectionReference _collectionRef = _firestore.collection('events');
-    QuerySnapshot querySnapshot = await _collectionRef.get();
+    final CollectionReference collectionRef = _firestore.collection('events');
+    QuerySnapshot querySnapshot = await collectionRef.get();
     final allDocs = querySnapshot.docs;
     return allDocs.length;
   }
@@ -80,13 +78,14 @@ class _EventListPageState extends State<EventListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: const Text('Events'),
       ),
       body: FutureBuilder<int>(
         future: _countDocuments(),
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -94,6 +93,21 @@ class _EventListPageState extends State<EventListPage> {
               itemCount: snapshot.data,
               itemBuilder: (context, index) {
                 return ListTile(
+                  leading: const Icon(Icons.event),
+                  dense: true,
+                  selected: true,
+                  //delete event by long press
+                  onLongPress: () async {
+                    try {
+                      await _firestore.collection('events').doc(eventList[index]['id']).delete();
+                      setState(() {
+                        eventList.removeAt(index);
+                      });
+                    } catch(e) {
+                      print('Error occurred while deleting event: $e');
+                    }
+                  },
+                  trailing: const Icon(Icons.delete),
                   title: Text(eventList[index]['name'] ?? 'Event name not found'),
                   onTap: (){
                     Navigator.push(
