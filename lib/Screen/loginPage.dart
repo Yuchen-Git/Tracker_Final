@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
-import 'list.dart';
-import 'navigatorForEveryPage.dart';
+import '../main.dart';
+import '../list.dart';
+import '../navigatorForEveryPage.dart';
 
 
 class LoginPage extends StatefulWidget {

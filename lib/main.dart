@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'navigatorForEveryPage.dart';
-import 'loginPage.dart';
+import 'Screen/loginPage.dart';
 import 'list.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';

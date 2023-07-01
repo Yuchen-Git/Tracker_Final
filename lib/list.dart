@@ -8,24 +8,52 @@ class ListViewPage extends StatefulWidget {
 }
 
 class _ListViewPageState extends State<ListViewPage> {
-  final List<String> entries = <String>['A', 'B', 'C'];
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-                height: 100,
-                color: Colors.amber,
-                child: Row(
-                  children: [
+        body: Column(
+          children: [
+            Expanded(
+              flex: 10,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: Image(
+                        image: NetworkImage('https://www.graystep.com/asbworks/assets/eventtrackerlogo.png')
+                    ),
+                  )
 
-                  ],
-                )
-            );
-          },
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 65,
+              child: Column(
+                children: [
+
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 25,
+              child: Row(
+                children: [
+
+                ],
+              ),
+            ),
+
+          ],
         )
+
     );
   }
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'loginPage.dart';
+import 'Screen/loginPage.dart';
 import 'list.dart';
 import 'userProfile.dart';
+import 'Screen/DemoLoginPage.dart';
 
 
 
@@ -31,7 +32,7 @@ class _PageNaviState extends State<PageNavi> {
                       MaterialPageRoute(builder: (context) => LoginPage()),
                     );
                   },
-                  child: const Text('Login'),
+                  child: const Text('LoginPage'),
                 ),
               ],
             ),
@@ -47,7 +48,7 @@ class _PageNaviState extends State<PageNavi> {
                       MaterialPageRoute(builder: (context) => ListViewPage()),
                     );
                   },
-                  child: const Text('List'),
+                  child: const Text('ListViewPage'),
                 ),
               ],
             ),
@@ -63,11 +64,28 @@ class _PageNaviState extends State<PageNavi> {
                       MaterialPageRoute(builder: (context) => userProfilePage()),
                     );
                   },
-                  child: const Text('Profile'),
+                  child: const Text('userProfilePage'),
                 ),
               ],
             ),
           ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FirebaseAuthPage()),
+                    );
+                  },
+                  child: const Text('FirebaseAuthPage'),
+                ),
+              ],
+            ),
+          ),
+
         ],
       ),
     );
