@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 import '../list.dart';
 import '../navigatorForEveryPage.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthPage extends StatefulWidget {
   const FirebaseAuthPage({super.key});
@@ -12,6 +12,8 @@ class FirebaseAuthPage extends StatefulWidget {
 }
 
 class _FirebaseAuthPageState extends State<FirebaseAuthPage> {
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -39,6 +41,7 @@ class _FirebaseAuthPageState extends State<FirebaseAuthPage> {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: usernameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Username/Email',
@@ -47,6 +50,7 @@ class _FirebaseAuthPageState extends State<FirebaseAuthPage> {
                   ),
                   Expanded(
                     child: TextField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
@@ -68,10 +72,16 @@ class _FirebaseAuthPageState extends State<FirebaseAuthPage> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Home Page')),
-                        );
+                        FirebaseAuth.instance.signInWithEmailAndPassword(email: usernameController.text, password: passwordController.text).then((value) {
+                          print("Successfully login the user !");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const PageNavi()),
+                          );
+                        }).catchError((error) {
+                              print("Failed to login the user !");
+                              print(error.toString());
+                            });
                       },
                       child: const Text('Login'),
                     ),
@@ -81,10 +91,13 @@ class _FirebaseAuthPageState extends State<FirebaseAuthPage> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const PageNavi()),
-                        );
+                        //sign up a user and save to firebase auth service
+                        FirebaseAuth.instance.createUserWithEmailAndPassword(email: usernameController.text, password: passwordController.text)
+                            .then((value) => print("Successfully sign up the user !"))
+                            .catchError((error) {
+                              print("Failed to sign up the user !");
+                              print(error.toString());
+                            });
                       },
                       child: const Text('Sign Up'),
                     ),
