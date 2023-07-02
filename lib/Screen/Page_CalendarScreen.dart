@@ -92,7 +92,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.eventName} - Checked days: ${_checkedDays.length}'),
+        title: Text('${widget.eventName} ',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            )),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -124,6 +128,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 }
                 return null;
               },
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(5),
+            child: Row(
+              children: [
+                Text('Toggled: ${_checkedDays.length}',
+                  style: const TextStyle(fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red),),
+              ],
             ),
           ),
           ..._selectedEvents.map((event) => ListTile(
