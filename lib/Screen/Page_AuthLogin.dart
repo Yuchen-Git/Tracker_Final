@@ -115,8 +115,6 @@ class _FirebaseAuthPageState extends State<FirebaseAuthPage> {
                           setLoginMessage("Successfully sign up the user !");
                           //create a new databased for the newly added user
                           FirebaseFirestore.instance.collection('users').doc(usernameController.text).set({
-                            'username': usernameController.text,
-                            'password': passwordController.text,
                           });
                           setLoginMessage("Successfully create a new database for the user !");
 

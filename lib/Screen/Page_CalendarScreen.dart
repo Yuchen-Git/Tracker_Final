@@ -47,6 +47,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
       } else {
         _checkedDays.add(_selectedDay);
       }
+      _firestore.collection('events').doc(widget.eventId).update({
+        'events': _events.map((key, value) => MapEntry(key.toString(), value)),
+        'checkedDays': _checkedDays.map((date) => date.toString()).toList(),
+      });
+
     });
   }
 
