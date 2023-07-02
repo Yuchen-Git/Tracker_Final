@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'Page_EventsList.dart';
-import 'navigatorForEveryPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthPage extends StatefulWidget {
@@ -113,6 +113,12 @@ class _FirebaseAuthPageState extends State<FirebaseAuthPage> {
                             .then((value) {
                           print("Successfully sign up the user !");
                           setLoginMessage("Successfully sign up the user !");
+                          //create a new databased for the newly added user
+                          FirebaseFirestore.instance.collection('users').doc(usernameController.text).set({
+                            'username': usernameController.text,
+                            'password': passwordController.text,
+                          });
+                          setLoginMessage("Successfully create a new database for the user !");
 
                         })
                             .catchError((error) {
@@ -124,18 +130,6 @@ class _FirebaseAuthPageState extends State<FirebaseAuthPage> {
                       child: const Text('Sign Up'),
                     ),
                   ),
-                  Expanded(
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const PageNavi()),
-                        );
-                      },
-                      child: const Text('PageNavi'),
-                    ),
-                  ),
-
                 ],
               ),
             ),
