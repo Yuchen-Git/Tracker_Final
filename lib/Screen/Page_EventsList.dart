@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'Page_CalendarScreen.dart';
 
 class EventListPage extends StatefulWidget {
-  const EventListPage({Key? key}): super(key: key);
+  const EventListPage({Key? key}) : super(key: key);
 
   @override
   State<EventListPage> createState() => _EventListPageState();
 }
 
-
 class _EventListPageState extends State<EventListPage> {
   List<Map<String, dynamic>> eventList = [];
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Retrieve the authenticated user's ID
+  String get userId => _auth.currentUser?.uid ?? '';
 
   Future<int> _countDocuments() async {
-    final CollectionReference collectionRef = _firestore.collection('events');
-    QuerySnapshot querySnapshot = await collectionRef.get();
+    final QuerySnapshot querySnapshot =
+    await _firestore.collection('events').where('userId', isEqualTo: userId).get();
     final allDocs = querySnapshot.docs;
     return allDocs.length;
   }
@@ -28,7 +32,10 @@ class _EventListPageState extends State<EventListPage> {
   }
 
   void _loadEvents() async {
-    QuerySnapshot query = await _firestore.collection('events').get();
+    final QuerySnapshot query = await _firestore
+        .collection('events')
+        .where('userId', isEqualTo: userId)
+        .get();
     setState(() {
       eventList = query.docs.map((doc) => {'id': doc.id, 'name': doc['name']}).toList();
     });
@@ -38,40 +45,42 @@ class _EventListPageState extends State<EventListPage> {
     TextEditingController controller = TextEditingController();
 
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Add new event'),
-            content: TextField(
-              controller: controller,
-              decoration: const InputDecoration(hintText: "Enter event name"),
-            ),
-            actions: [
-              TextButton(
-                child: const Text('Add'),
-                onPressed: () async {
-                  if(controller.text.isNotEmpty) {
-                    NavigatorState navigator = Navigator.of(context);
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add new event'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: "Enter event name"),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Add'),
+              onPressed: () async {
+                if (controller.text.isNotEmpty) {
+                  NavigatorState navigator = Navigator.of(context);
 
-                    try {
-                      DocumentReference ref = await _firestore.collection('events').add({
-                        'name': controller.text,
-                      });
-                      setState(() {
-                        eventList.add({'id': ref.id, 'name': controller.text});
-                      });
-                      navigator.pop();
-                    } catch(e) {
-                      print('Error occurred while adding event: $e');
-                    }
-                  } else {
-                    print('Event name cannot be empty');
+                  try {
+                    DocumentReference ref = await _firestore.collection('events').add({
+                      'userId': userId,
+                      'name': controller.text,
+                    });
+                    setState(() {
+                      eventList.add({'id': ref.id, 'name': controller.text});
+                    });
+                    navigator.pop();
+                  } catch (e) {
+                    print('Error occurred while adding event: $e');
                   }
-                },
-              ),
-            ],
-          );
-        });
+                } else {
+                  print('Event name cannot be empty');
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -96,41 +105,36 @@ class _EventListPageState extends State<EventListPage> {
                   leading: const Icon(Icons.event),
                   dense: true,
                   selected: true,
-                  //delete event by long press
+                  // delete event by long press
                   onLongPress: () async {
                     try {
                       await _firestore.collection('events').doc(eventList[index]['id']).delete();
                       setState(() {
                         eventList.removeAt(index);
                       });
-                    } catch(e) {
+                    } catch (e) {
                       print('Error occurred while deleting event: $e');
                     }
                   },
                   trailing: const Icon(Icons.delete),
                   title: Text(eventList[index]['name'] ?? 'Event name not found'),
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CalendarScreen(eventName:eventList[index]['name'], eventId:eventList[index]['id']
+                        builder: (context) => CalendarScreen(
+                          eventName: eventList[index]['name'],
+                          eventId: eventList[index]['id'],
                         ),
                       ),
                     );
-                  }
-
-
-
+                  },
                 );
               },
             );
           }
         },
       ),
-      // bottomNavigationBar: BottomAppBar(
-      //   shape: const CircularNotchedRectangle(),
-      //   child: Container(height: 60.0,),
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddEventDialog,
         tooltip: 'Add Event',
